@@ -4,41 +4,65 @@ import webbrowser
 import requests
 from CarMake import CarMake
 
-def getLinksOfCarMakes(url):
-    print("Looking for data from ", url)
-    result = requests.get(url)
+# GRAB LINKS FROM URL + MAKE + MODEL 
+def getLinks():
+    if isMake == True:
+        print("Looking for data from: ", url+linksOfCarMakes[0])
+        result = requests.get(url+linksOfCarMakes[0])
+    else:
+        print("Looking for data from: ", url)
+        result = requests.get(url)
+
     soup = BeautifulSoup(result.text, "html.parser")
-    UnfilteredList = [a['href'] for a in soup.find_all('a', href=True)]
-    filter1 = [x for x in UnfilteredList if "car-specs" in x]
-    filter2 = [x for x in filter1 if "www" not in x]
-    filter2.pop()
-    print(filter2)
-    return filter2
+    List = [a['href'] for a in soup.find_all('a', href=True)]
+    List = [x for x in List if "car-specs" in x]
+    List = [x for x in List if "www" not in x]
+    List.pop()
 
-def getCarMakeNames(listOfCarMakes: list[string]) -> list[string]:
-  return [x.split('/')[2] for x in listOfCarMakes]
+    if isModel == True:
+        List.pop(0)
 
-def getLinksOfCarMakeModels(url, linksOfCarMakes):
-    print("Looking for data from: ", url+linksOfCarMakes[0])
-    result = requests.get(url+linksOfCarMakes[0])
-    soup = BeautifulSoup(result.txt, "html.parser")
-    print(soup)
+    return List
+
+# EXTRACT CAR MODEL OR CAR MAKE FROM LINKS 
+def extractFromLinks(listOfLinks, isModel: list[string]) -> list[string]:
+    if isModel == True:
+         return [x.split('/')[2] for x in listOfLinks]
+    elif isModel == False:
+        return [x.split('/')[3] for x in listOfLinks]
 
 
+
+#NEED A FUNCION THAT LOOP THROUGH THE ENTIRE LIST AND CALLS THE GET LINKS FUNCTION FOR EVERY CAR IN THE MAKE
+def buildListFromLinks():
+    if isMake == False and isModel == False:
+        global linksOfCarMakes
+        linksOfCarMakes = getLinks()
+        print(*linksOfCarMakes, sep='\n')
+        isMake = True
+
+
+
+
+
+global url
+global isModel
+global isMake
+isModel = False
+isMake = False 
 url = "https://www.cars-directory.net/"
-linksOfCarMakes = getLinksOfCarMakes(url)
-numberOfCarMakes = len(linksOfCarMakes)
-print(numberOfCarMakes)
 
-listOfCarMakeNames = getCarMakeNames(linksOfCarMakes)
-print(listOfCarMakeNames)
 
-with open("FileToExport.txt", 'w') as f:
-    for x in listOfCarMakeNames:
-        f.write(x)
-        f.write('\n')
-    print("Data Exported")
+buildListFromLinks()
 
+
+
+
+#with open("FileToExport.txt", 'w') as f:
+ #   for x in listOfCarMakeNames:
+  #      f.write(x)
+   #     f.write('\n')
+   # print("Data Exported")
 
 
 
