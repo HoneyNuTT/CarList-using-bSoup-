@@ -87,34 +87,37 @@ data = data.split('\n')
 print(type(data))
 print(len(data))
 
-newData = data[:56]
-newData = extractFromLinks(newData, forMake,forModel)
-print(newData)
+linksOfMakes = data[:56]
+#linksOfMakes = extractFromLinks(linksOfMakes, forMake,forModel)
+#print(newData)
 
-#newerData = data[55:]
-#forModel = True
-#forMake = False
-#print(newerData[1])
-#print(len(newerData))
-#newerData = extractFromLinks(newerData, forMake,forModel)
-#print(newerData)
+linksOfModels = data[55:1772]
+forModel = True
+forMake = False
+print(*linksOfModels,sep='\n')
+#print(len(linksOfModels))
+#linksOfModels = extractFromLinks(linksOfModels, forMake,forModel)
+#print(*linksOfModels,sep='\n')
 
 
 
 
 #print(data)
 
-#with open("filetoexport.txt", 'w') as f:
-#    for make in linksofcarmakes:
-#        f.write(make)
-#        f.write('\n')
-#        for model in linksofcarmodels:
-#            if model.split('/')[2] == make:
-#                f.write(model)
-#                f.write('\n')
+with open("CarList.txt", 'w') as f:
+    for make in linksOfMakes:
+        #print(make.split('/')[2])
+        f.write('\n')
+        f.write(make.split('/')[2])
+        f.write('\n')
+        for model in linksOfModels:
+            if  make.split('/')[2] == model.split('/')[2]:
+                #print(model.split('/')[3])
+                f.write(model.split('/')[3])
+                f.write('\n')
    
 
-#    print("data exported")
+    print("data exported")
 
 
 
